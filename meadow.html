@@ -5,9 +5,11 @@
     </head>
     <body>
         <div id="div2"></div>
+        <div id="div3"></div>
                 
         <script>
             var meadowData;
+            var traces = [];
             loadData = async function() {
                 meadowData = await d3.csv("dailymeadow.csv");
                 console.log(meadowData);
@@ -21,31 +23,159 @@
                 // cols = ['PTemp_C_Avg'];
                 xs = unpack(meadowData, "datetime")
 
-                var traces = [];
+                traces = [];
 
                 for (var c in cols) {
                     cc = cols[c]
+                    console.log(cc);
                     t1 = unpack(meadowData, cc)
                     vis = true;
-                    if (defCols.indexOf(cc) == -1) {
-                        vis = "legendonly";
-                    }
-                    traces.push({
+                    thisTrace =  {
                         x: xs,
                         y: t1,
                         name: cc,
-                        visible: vis,
                         type: "scattergl",
                         mode: 'lines+markers',
                         marker: {
                             size: 5, 
                             opacity: 0.5
                         }
-                    })
+                    };
+                    if (defCols.indexOf(cc) == -1) {
+                        vis = "legendonly";
+                    }
+                    thisTrace["visible"] = vis;
+                    d = parseInt(c)+1;
+
+                    if (d > 1) {
+                        thisTrace["yaxis"] =  "y" + d;
+                        console.log(thisTrace);
+                    }
+
+                    traceName = "yaxis" + d + " data";
+                    // thisTrace["name"] = traceName;
+
+                    traces.push(thisTrace)
                 }
 
+                // fig.update_layout(
+                // {
+                //     for ( fig.data) {
+
+                //     }
+                //     t.yaxis.replace("y", "yaxis"): {
+                //         "title": t.name,
+                //         "overlaying": "y",
+                //         "side": "right",
+                //         "position":1-(i/15)
+                //     }
+                    
+                //     if t.yaxis != "y"
+                // }
+
+                layout = {
+                    // xaxis : {
+                    //     domain: [0.25, 0.75]
+                    // },
+                    
+                    width: 1500,
+                    // autosize: true,
+                    // automargin: true,
+                    
+                    yaxis1 : {
+                        title: {
+                            text: cols[0]
+                        },
+                        // side: "left",
+                        anchor: "y",
+                        // overlaying: "y",
+                        autoshift: true,
+                        // side: "left",
+                        // position: 1.25
+                    },                        
+                    yaxis2: {
+                        title: {
+                            text: cols[1]
+                        },
+                        anchor: "free",
+                        overlaying: "y",
+                        autoshift: true,
+                        side: "left",
+                        position: 1.2
+                    },
+                    yaxis3: {
+                        title: {
+                            text: cols[2]
+                        },
+                        anchor: "x",
+                        overlaying: "y",
+                        // autoshift: true,
+                        side: "right",
+                    },
+                    yaxis4: {
+                        title: {
+                            text: cols[3]
+                        },
+                        anchor: "free",
+                        overlaying: "y",
+                        autoshift: true,
+                        side: "right",
+                        position: 1.4,
+                        
+                    },
+                    yaxis5: {
+                        title: {
+                            text: cols[4]
+                        },
+                        anchor: "free",
+                        overlaying: "y",
+                        autoshift: true,
+                        side: "right",
+                        position: 1.6,
+                        
+                    },
+                    yaxis6: {
+                        title: {
+                            text: cols[5]
+                        },
+                        anchor: "free",
+                        overlaying: "y",
+                        autoshift: true,
+                        side: "right",
+                        position: 1.8,
+                    },
+                    yaxis7: {
+                        title: {
+                            text: cols[6]
+                        },
+                        anchor: "free",
+                        overlaying: "y",
+                        autoshift: true,
+                        side: "right",
+                        position: 2,
+                    },
+                    yaxis7: {
+                        title: {
+                            text: cols[7]
+                        },
+                        anchor: "free",
+                        overlaying: "y",
+                        autoshift: true,
+                        side: "right",
+                        position: 2.2,
+                    },
+
+
+                    margin: {
+                        l: 200, 
+                        r: 250  
+                    },
+                    legend: {"xanchor": "right", "x": 1.5}
+                }
+                var config = {responsive: true}
+
                 
-                Plotly.newPlot('div2', traces);
+                Plotly.newPlot('div2', traces, layout, config);
 
 
                 return meadowData;
@@ -54,7 +184,88 @@
             loadData();
             // const meadowData = loadData();
             console.log(meadowData);
-            
+
+            var trace1 = {
+                x: [1, 2, 3],
+                y: [4, 5, 6],
+                name: 'yaxis1 data',
+                type: 'scatter'
+            };
+            var trace2 = {
+                x: [2, 3, 4],
+                y: [40, 50, 60],
+                name: 'yaxis2 data',
+                yaxis: 'y2',
+                type: 'scatter'
+            };
+
+            var trace3 = {
+                x: [4, 5, 6],
+                y: [40000, 50000, 60000],
+                name: 'yaxis3 data',
+                yaxis: 'y3',
+                type: 'scatter'
+            };
+            var trace4 = {
+                x: [5, 6, 7],
+                y: [400000, 500000, 600000],
+                name: 'yaxis4 data',
+                yaxis: 'y4',
+                type: 'scatter'
+            };
+
+
+            var data = [trace1, trace2, trace3, trace4];
+            var layout = {
+                title: {
+                    text: 'multiple y-axes example',
+                    font: {color: '#1f77b4'}
+                },
+                width: 800,
+                xaxis: {domain: [0.3, 0.7]},
+                yaxis: {
+                    title: {
+                        text: 'yaxis title',
+                        font: {color: '#1f77b4'}
+                    },
+                    tickfont: {color: '#1f77b4'}
+                },
+                yaxis2: {
+                    title: {
+                        text: 'yaxis2 title',
+                        font: {color: '#ff7f0e'}
+                    },
+                    tickfont: {color: '#ff7f0e'},
+                    anchor: 'free',
+                    overlaying: 'y',
+                    side: 'left',
+                    position: 0.15
+                },
+                yaxis3: {
+                    title: {
+                        text: 'yaxis4 title',
+                        font: {color: '#d62728'}
+                    },
+                    tickfont: {color: '#d62728'},
+                    anchor: 'x',
+                    overlaying: 'y',
+                    side: 'right'
+                },
+                yaxis4: {
+                    title: {
+                        text: 'yaxis5 title',
+                        font: {color: '#9467bd'}
+                    },
+                    tickfont: {color: '#9467bd'},
+                    anchor: 'free',
+                    overlaying: 'y',
+                    side: 'right',
+                    position: 0.85
+                }
+            };
+
+            // Plotly.newPlot('div3', data, layout);
+
             /* Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv', function(err, rows) {
 
                 function unpack(rows, key) {
