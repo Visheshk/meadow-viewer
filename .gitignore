@@ -1,0 +1,4 @@
+*node_modules*
+*DS_Store
+*quickstart*
+web-data/hana/src/index.js
